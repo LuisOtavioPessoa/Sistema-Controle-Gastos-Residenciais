@@ -5,7 +5,6 @@ const router = Router();
 
 router.get("/transacoes", TransacaoController.findAll);
 router.post("/transacoes", TransacaoController.criar);
-//router.get("/transacoes/pessoa/:pessoaId", TransacaoController.findByPessoa);
-
+router.get("/transacoes/pessoa/:pessoaId", TransacaoController.findByPessoa);
 
 export default router;

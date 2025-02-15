@@ -1,0 +1,66 @@
+.titulo-lista-pessoas {
+    font-size: 22px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px; /* Adiciona espaço abaixo do título */
+}
+
+.lista-pessoas {
+    background-color: #fff;
+    border: 2px solid #000;
+    padding: 20px;
+    width: 80%;
+    max-width: 600px;
+    margin: 20px auto; /* Adiciona mais espaço ao redor da lista */
+    border-radius: 8px;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.form-pessoas {
+    margin-bottom: 30px; /* Adiciona mais espaço abaixo do formulário */
+}
+
+.lista-pessoas ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.lista-pessoas li {
+    font-weight: bold;
+    display: flex; /* Usando Flexbox para alinhar nome e botão */
+    justify-content: space-between; /* Coloca o botão à direita, afastado do nome */
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #000;
+}
+
+.pessoa-item {
+    display: flex;
+    justify-content: space-between; /* Espaça o nome do botão */
+    align-items: center; /* Alinha o conteúdo no centro */
+    padding: 10px;
+    border-bottom: 2px solid #000; /* Linha preta grossa */
+}
+
+.pessoa-item span {
+    flex-grow: 1; /* Faz com que o nome ocupe o espaço disponível */
+}
+
+.transacoes-btn {
+    padding: 8px 12px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.transacoes-btn:hover {
+    background-color: #0056b3;
+}
+
+.lista-pessoas li:last-child {
+    border-bottom: none;
+}
