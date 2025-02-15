@@ -1,13 +1,16 @@
 import { useEffect, useState } from "react";
 import { Pessoa } from "../Types/Pessoa";
 import { fetchPessoasData } from "../Service/api.ts";
-import FormPessoas from "./FormPessoas";
+import FormPessoas from "./FormPessoas.tsx";
+import FormTransacao from "./FormTransacao.tsx";
 import "./ListaPessoas.css";
 
 export function ListaPessoas() {
   const [pessoas, setPessoas] = useState<Pessoa[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isFormVisible, setIsFormVisible] = useState<boolean>(false);
+  const [pessoaSelecionada, setPessoaSelecionada] = useState<Pessoa | null>(null);
 
   useEffect(() => {
     async function carregarPessoas() {
@@ -22,12 +25,22 @@ export function ListaPessoas() {
     }
 
     carregarPessoas();
-  }, []); // Carrega a lista apenas uma vez quando o componente for montado
+  }, []);
 
-  // Função para recarregar a lista de pessoas
   const recarregarPessoas = async () => {
-    const dados = await fetchPessoasData(); // Recarrega os dados das pessoas
-    setPessoas(dados); // Atualiza o estado com a lista mais recente
+    const dados = await fetchPessoasData();
+    setPessoas(dados);
+  };
+
+  const handleAbrirTransacoes = (pessoa: Pessoa) => {
+    setPessoaSelecionada(pessoa);
+    setIsFormVisible(true);
+  };
+
+  const handleVoltarParaLista = () => {
+    setPessoaSelecionada(null);
+    setIsFormVisible(false);
+    recarregarPessoas();
   };
 
   if (loading) return <p>Carregando...</p>;
@@ -35,20 +48,28 @@ export function ListaPessoas() {
 
   return (
     <div>
-    <FormPessoas recarregarPessoas={recarregarPessoas} />
-    <h2 className="titulo-lista-pessoas">Lista de Pessoas</h2>
-    <div className="lista-pessoas">
-        <ul>
-            {pessoas.map((pessoa) => (
+      {isFormVisible && pessoaSelecionada ? (
+        <FormTransacao pessoaId={pessoaSelecionada.id} 
+        pessoaNome={pessoaSelecionada.nome} />
+      ) : (
+        <>
+          <FormPessoas recarregarPessoas={recarregarPessoas} />
+          <h2 className="titulo-lista-pessoas">Lista de Pessoas</h2>
+          <div className="lista-pessoas">
+            <ul>
+              {pessoas.map((pessoa) => (
                 <li key={pessoa.id} className="pessoa-item">
-                    <span>{pessoa.nome} - {pessoa.idade} anos</span>
-                    <button className="transacoes-btn">Transações</button>
+                  <span>{pessoa.nome} - {pessoa.idade} anos</span>
+                  <button className="transacoes-btn" onClick={() => handleAbrirTransacoes(pessoa)}>
+                    Transações
+                  </button>
                 </li>
-            ))}
-        </ul>
+              ))}
+            </ul>
+          </div>
+        </>
+      )}
     </div>
-</div>
-
   );
 }
 
