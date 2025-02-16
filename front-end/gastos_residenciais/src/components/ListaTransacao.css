@@ -1,0 +1,42 @@
+.titulo-lista-transacoes {
+    font-size: 22px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.lista-transacoes {
+    background-color: #fff;
+    border: 2px solid #000;
+    padding: 20px;
+    width: 90%;
+    max-width: 800px;
+    margin: 20px auto;
+    border-radius: 8px;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.lista-transacoes table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.lista-transacoes th, .lista-transacoes td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 2px solid #000;
+}
+
+.lista-transacoes th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+}
+
+.transacao-item td {
+    font-size: 16px;
+}
+
+/* Remove a linha inferior da última transação */
+.lista-transacoes tbody tr:last-child td {
+    border-bottom: none;
+}

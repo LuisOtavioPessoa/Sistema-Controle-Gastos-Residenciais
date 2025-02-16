@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Transacao } from "../Types/Transacao";
 import { findTransacaoId } from "../Service/api.ts";
+import "./ListaTransacao.css"
 
 type ListaTransacaoProps = {
   pessoaId: number;
@@ -41,18 +42,36 @@ export function ListaTransacao({ pessoaId }: ListaTransacaoProps) {
   if (transacoes.length === 0) return <p>Nenhuma transação encontrada.</p>;
 
   return (
-    <div>
-      <h2 className="titulo-lista-transacoes">Lista de Transações</h2>
-      <div className="lista-transacoes">
-        <ul>
+<div>
+  <h2 className="titulo-lista-transacoes">Lista de Transações</h2>
+  <div className="lista-transacoes">
+    {transacoes && transacoes.length > 0 ? ( // Verifica se há transações antes de renderizar
+      <table>
+        <thead>
+          <tr>
+            <th>Transação ID</th>
+            <th>Descrição</th>
+            <th>Valor</th>
+            <th>Tipo</th>
+          </tr>
+        </thead>
+        <tbody>
           {transacoes.map((transacao) => (
-            <li key={transacao.id} className="transacao-item">
-              <span>{transacao.descricao} - R${transacao.valor} ({transacao.tipo})</span>
-            </li>
+            <tr key={transacao.id} className="transacao-item">
+              <td>{transacao.id}</td>
+              <td>{transacao.descricao}</td>
+              <td>R$ {typeof transacao.valor === "number" ? transacao.valor.toFixed(2) : transacao.valor}</td>
+              <td>{transacao.tipo}</td>
+            </tr>
           ))}
-        </ul>
-      </div>
-    </div>
+        </tbody>
+      </table>
+    ) : (
+      <p className="mensagem-vazia">Nenhuma transação encontrada.</p>
+    )}
+  </div>
+</div>
+
   );
 }
 
