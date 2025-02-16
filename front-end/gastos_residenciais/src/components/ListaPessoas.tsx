@@ -3,6 +3,7 @@ import { Pessoa } from "../Types/Pessoa";
 import { fetchPessoasData } from "../Service/api.ts";
 import FormPessoas from "./FormPessoas.tsx";
 import FormTransacao from "./FormTransacao.tsx";
+import ListaTransacao from "./ListaTransacao.tsx"; // Certifique-se de importar ListaTransacao corretamente
 import "./ListaPessoas.css";
 
 export function ListaPessoas() {
@@ -49,8 +50,7 @@ export function ListaPessoas() {
   return (
     <div>
       {isFormVisible && pessoaSelecionada ? (
-        <FormTransacao pessoaId={pessoaSelecionada.id} 
-        pessoaNome={pessoaSelecionada.nome} />
+        <FormTransacao pessoaId={pessoaSelecionada.id} pessoaNome={pessoaSelecionada.nome} onVoltar={handleVoltarParaLista} />
       ) : (
         <>
           <FormPessoas recarregarPessoas={recarregarPessoas} />
@@ -69,6 +69,7 @@ export function ListaPessoas() {
           </div>
         </>
       )}
+
     </div>
   );
 }

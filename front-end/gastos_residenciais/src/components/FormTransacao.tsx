@@ -1,33 +1,33 @@
 import { useState, useEffect } from "react";
 import { saveDataTransacoes } from "../Service/api";
 import ListaTransacao from "./ListaTransacao";
-import { findTransacaoId } from "../Service/api"; // Criar essa função se ainda não existir
+import { findTransacaoId } from "../Service/api";
 import "./FormTransacao.css";
 
 interface FormTransacaoProps {
   pessoaId: number;
   pessoaNome: string;
+  onVoltar: () => void;  // Função para voltar à lista
 }
 
-export function FormTransacao({ pessoaId, pessoaNome }: FormTransacaoProps) {
+export function FormTransacao({ pessoaId, pessoaNome, onVoltar }: FormTransacaoProps) {
   const [descricao, setDescricao] = useState("");
   const [valor, setValor] = useState("");
   const [tipo, setTipo] = useState("despesa");
   const [mensagem, setMensagem] = useState("");
-  const [transacoes, setTransacoes] = useState<any[]>([]); // Estado para armazenar as transações
+  const [transacoes, setTransacoes] = useState<any[]>([]);
 
-  // Função para buscar as transações da pessoa específica
   async function fetchTransacoes() {
     try {
       const response = await findTransacaoId(pessoaId);
-      setTransacoes(response); // Atualiza a lista de transações
+      setTransacoes(response);
     } catch (error) {
       console.error("Erro ao buscar transações:", error);
     }
   }
 
   useEffect(() => {
-    if(pessoaId) {
+    if (pessoaId) {
       fetchTransacoes();
     }
   }, [pessoaId]);
@@ -47,24 +47,19 @@ export function FormTransacao({ pessoaId, pessoaNome }: FormTransacaoProps) {
       setDescricao("");
       setValor("");
       setMensagem("Transação cadastrada com sucesso!");
-      fetchTransacoes(); // Atualiza a lista após inserir nova transação
+      fetchTransacoes();
     } catch (error) {
       setMensagem("Erro ao cadastrar transação. Tente novamente.");
     }
   }
 
-  function handleLimparCampos() {
-    setDescricao("");
-    setValor("");
-    setTipo("despesa");
-    setMensagem("");
+  function handleVoltar() {
+    onVoltar(); // Chama a função passada como prop para voltar à lista
   }
 
   return (
     <div className="form-transacao">
-      <h2 className="titulo-form-transacao">
-        Cadastro das Transações do(a) {pessoaNome}
-      </h2>
+      <h2 className="titulo-form-transacao">Cadastro das Transações do(a) {pessoaNome}</h2>
 
       <form onSubmit={handleSubmit}>
         <label>
@@ -97,16 +92,15 @@ export function FormTransacao({ pessoaId, pessoaNome }: FormTransacaoProps) {
 
         <div className="botoes-container">
           <button type="submit">Cadastrar</button>
-          <button type="button" onClick={handleLimparCampos} className="botao-limpar">
-            Limpar
+          <button type="button" onClick={handleVoltar} className="botao-voltar">
+            Voltar
           </button>
         </div>
       </form>
 
       {mensagem && <p className="mensagem">{mensagem}</p>}
 
-      {/* Exibindo a lista de transações junto com o formulário */}
-      <ListaTransacao pessoaId={pessoaId} />
+      <ListaTransacao pessoaNome={pessoaNome}pessoaId={pessoaId} />
     </div>
   );
 }
