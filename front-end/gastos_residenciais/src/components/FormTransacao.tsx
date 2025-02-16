@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { saveDataTransacoes } from "../Service/api";
 import ListaTransacao from "./ListaTransacao";
-import { findTransacaoId } from "../Service/api";
+import { findTransacaoId, findPessoaId } from "../Service/api";
 import "./FormTransacao.css";
 
 interface FormTransacaoProps {
@@ -16,6 +16,7 @@ export function FormTransacao({ pessoaId, pessoaNome, onVoltar }: FormTransacaoP
   const [tipo, setTipo] = useState("despesa");
   const [mensagem, setMensagem] = useState("");
   const [transacoes, setTransacoes] = useState([]);  // Definindo o estado para transações
+  const [idade, setIdade] = useState<number | null>(null); // Estado para armazenar a idade da pessoa
 
   // Função para recarregar as transações após cadastrar uma nova
   const recarregarTransacoes = async () => {
@@ -26,6 +27,22 @@ export function FormTransacao({ pessoaId, pessoaNome, onVoltar }: FormTransacaoP
       console.error("Erro ao buscar transações:", error);
     }
   };
+
+  // Função para buscar a idade da pessoa
+  useEffect(() => {
+    async function carregarPessoa() {
+      try {
+        const pessoa = await findPessoaId(pessoaId);
+        if (pessoa) {
+          setIdade(pessoa.idade); // Armazenar a idade da pessoa
+        }
+      } catch (error) {
+        console.error("Erro ao buscar dados da pessoa:", error);
+      }
+    }
+
+    carregarPessoa();
+  }, [pessoaId]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -79,9 +96,9 @@ export function FormTransacao({ pessoaId, pessoaNome, onVoltar }: FormTransacaoP
 
         <label>
           Tipo:
-          <select value={tipo} onChange={(e) => setTipo(e.target.value)}>
+          <select value={tipo} onChange={(e) => setTipo(e.target.value)} disabled={idade !== null && idade < 18}>
             <option value="despesa">Despesa</option>
-            <option value="receita">Receita</option>
+            {idade !== null && idade >= 18 && <option value="receita">Receita</option>}
           </select>
         </label>
 
