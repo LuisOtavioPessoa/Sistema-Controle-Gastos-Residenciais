@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize";
 import db from "../db/db.js";
-import Pessoa from "./Pessoa.js"; 
 
+// Definindo o modelo Transacao
 const Transacao = db.define("transacoes", {
     id: {
         type: DataTypes.BIGINT,
@@ -14,26 +14,34 @@ const Transacao = db.define("transacoes", {
         allowNull: false
     },
     valor: {
-        type: DataTypes.DECIMAL(10,2), 
+        type: DataTypes.DECIMAL(10,2),
         allowNull: false,
         validate: {
             min: 0 // Garante que o valor seja positivo
         }
     },
     tipo: {
-        type: DataTypes.ENUM("despesa", "receita"), // Garante apenas esses dois valores
+        type: DataTypes.ENUM("despesa", "receita"),
         allowNull: false
     },
     pessoaId: {
         type: DataTypes.BIGINT,
         allowNull: false,
         references: {
-            model: Pessoa, // Referencia a tabela de pessoas
+            model: 'pessoas', // Especifica diretamente a tabela associada
             key: "id"
         },
         onUpdate: "CASCADE",
         onDelete: "RESTRICT"
     }
-}, { timestamps: false });
+}, { timestamps: true });
+
+// Definir a associação após ambos os modelos estarem definidos
+Transacao.associate = (models) => {
+    Transacao.belongsTo(models.Pessoa, {
+        foreignKey: 'pessoaId',
+        onDelete: 'RESTRICT'
+    });
+};
 
 export default Transacao;
