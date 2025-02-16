@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Pessoa } from "../Types/Pessoa";
-import { fetchPessoasData } from "../Service/api.ts";
+import { fetchPessoasData, deletePessoa, deleteTransacoesByPessoaId } from "../Service/api.ts";
 import FormPessoas from "./FormPessoas.tsx";
 import FormTransacao from "./FormTransacao.tsx";
 import ListaTransacao from "./ListaTransacao.tsx"; // Certifique-se de importar ListaTransacao corretamente
@@ -44,6 +44,20 @@ export function ListaPessoas() {
     recarregarPessoas();
   };
 
+  const handleDeletarPessoa = async (id: number) => {
+    const confirmDelete = window.confirm("Tem certeza que deseja excluir esta pessoa e todas as suas transações?");
+    if (confirmDelete) {
+      try {
+        await deletePessoa(id);  // Deleta a pessoa
+        await deleteTransacoesByPessoaId(id);  // Deleta as transações da pessoa
+        recarregarPessoas();  // Recarrega a lista de pessoas após a exclusão
+      } catch (error) {
+        console.error("Erro ao deletar a pessoa ou as transações", error);
+      }
+    }
+  };
+  
+
   if (loading) return <p>Carregando...</p>;
   if (error) return <p>{error}</p>;
 
@@ -63,13 +77,15 @@ export function ListaPessoas() {
                   <button className="transacoes-btn" onClick={() => handleAbrirTransacoes(pessoa)}>
                     Transações
                   </button>
+                  <button className="deletar-btn" onClick={() => handleDeletarPessoa(pessoa.id)}>
+                  Deletar
+                  </button>
                 </li>
               ))}
             </ul>
           </div>
         </>
       )}
-
     </div>
   );
 }

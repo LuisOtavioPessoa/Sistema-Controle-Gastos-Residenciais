@@ -64,3 +64,18 @@
 .lista-pessoas li:last-child {
     border-bottom: none;
 }
+
+.deletar-btn {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-size: 14px;
+    border-radius: 4px;
+  }
+  
+  .deletar-btn:hover {
+    background-color: darkred;
+  }
+  

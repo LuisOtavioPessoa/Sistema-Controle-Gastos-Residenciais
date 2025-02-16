@@ -103,6 +103,15 @@ export async function getTransacoes(pessoaId: number): Promise<any[]> {
     }
 }
 
+// FUNÇÃO PARA DELETAR AS TRANSAÇÕES DE UMA PESSOA
+export async function deleteTransacoesByPessoaId(pessoaId: number): Promise<void> {
+    try {
+        const response = await axios.delete(`${BASE_URL}/transacoes/${pessoaId}`);
+        console.log(`Transações da pessoa com Id ${pessoaId} deletadas com sucesso:`, response.data);
+    } catch (error: any) {
+        console.error(`Erro ao deletar transações da pessoa com Id ${pessoaId}: ${error.message}`);
+    }
+}
   
   
 
