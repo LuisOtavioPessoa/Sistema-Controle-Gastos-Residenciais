@@ -65,18 +65,6 @@ export async function fetchTransacaoData(): Promise<Transacao[]> {
     }
 }
 
-// FUNÇÃO PARA BUSCAR TRANSAÇÕES DE UMA PESSOA ESPECÍFICA
-export async function findTransacaoId(pessoaId: number): Promise<Transacao[] | null> {
-    try {
-        const response = await axios.get(`${BASE_URL}/transacoes/pessoa/${pessoaId}`);
-        console.log(`Transações da pessoa ${pessoaId} encontradas:`, response.data);
-        return response.data;
-    } catch (error: any) {
-        console.error(`Erro ao buscar as transações da pessoa com Id ${pessoaId}: ${error.message}`);
-        return null;
-    }
-}
-
 // FUNÇÃO PARA CRIAR UMA NOVA TRANSAÇÃO
 export async function saveDataTransacoes(data: Transacao): Promise<void> {
     try {
@@ -92,3 +80,30 @@ export async function saveDataTransacoes(data: Transacao): Promise<void> {
         console.error(`Erro ao enviar os dados da transação: ${error.message}`);
     }
 }
+
+// FUNÇÃO PARA BUSCAR TRANSAÇÕES DE UMA PESSOA ESPECÍFICA(método 2)
+export async function getTransacoes(pessoaId: number): Promise<any[]> {
+    try {
+      const response = await axios.get(`${BASE_URL}/transacoes?pessoaId=${pessoaId}`);
+      return response.data;
+    } catch (error: any) {
+      console.error(`Erro ao buscar as transações: ${error.message}`);
+      return [];
+    }
+  }
+
+  // FUNÇÃO PARA BUSCAR TRANSAÇÕES DE UMA PESSOA ESPECÍFICA(método 1(em uso))
+  export async function findTransacaoId(pessoaId: number): Promise<Transacao[]> {
+    try {
+      const response = await axios.get<{ transacoes: Transacao[] }>(`${BASE_URL}/transacoes/pessoa/${pessoaId}`);
+      return response.data.transacoes; // Extraindo o array corretamente
+    } catch (error: any) {
+      console.error(`Erro ao buscar as transações da pessoa com Id ${pessoaId}: ${error.message}`);
+      return []; // Retorna um array vazio em caso de erro
+    }
+}
+
+  
+  
+
+  

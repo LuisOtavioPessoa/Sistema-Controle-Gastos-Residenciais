@@ -1,4 +1,5 @@
 import ListaPessoas from "./components/ListaPessoas";
+import ListaTransacao from "./components/ListaTransacao";
 
 function App() {
   return (
