@@ -15,22 +15,17 @@ export function FormTransacao({ pessoaId, pessoaNome, onVoltar }: FormTransacaoP
   const [valor, setValor] = useState("");
   const [tipo, setTipo] = useState("despesa");
   const [mensagem, setMensagem] = useState("");
-  const [transacoes, setTransacoes] = useState<any[]>([]);
+  const [transacoes, setTransacoes] = useState([]);  // Definindo o estado para transações
 
-  async function fetchTransacoes() {
+  // Função para recarregar as transações após cadastrar uma nova
+  const recarregarTransacoes = async () => {
     try {
       const response = await findTransacaoId(pessoaId);
-      setTransacoes(response);
+      setTransacoes(response);  // Atualiza a lista de transações
     } catch (error) {
       console.error("Erro ao buscar transações:", error);
     }
-  }
-
-  useEffect(() => {
-    if (pessoaId) {
-      fetchTransacoes();
-    }
-  }, [pessoaId]);
+  };
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -47,7 +42,7 @@ export function FormTransacao({ pessoaId, pessoaNome, onVoltar }: FormTransacaoP
       setDescricao("");
       setValor("");
       setMensagem("Transação cadastrada com sucesso!");
-      fetchTransacoes();
+      recarregarTransacoes();  // Recarrega as transações após cadastro
     } catch (error) {
       setMensagem("Erro ao cadastrar transação. Tente novamente.");
     }
@@ -100,7 +95,13 @@ export function FormTransacao({ pessoaId, pessoaNome, onVoltar }: FormTransacaoP
 
       {mensagem && <p className="mensagem">{mensagem}</p>}
 
-      <ListaTransacao pessoaNome={pessoaNome}pessoaId={pessoaId} />
+      {/* Passando transacoes e setTransacoes para ListaTransacao */}
+      <ListaTransacao 
+        pessoaNome={pessoaNome} 
+        pessoaId={pessoaId} 
+        transacoes={transacoes} 
+        setTransacoes={setTransacoes}  // Agora ListaTransacao tem acesso ao estado transacoes
+      />
     </div>
   );
 }

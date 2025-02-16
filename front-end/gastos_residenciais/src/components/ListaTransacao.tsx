@@ -6,16 +6,15 @@ import "./ListaTransacao.css";
 type ListaTransacaoProps = {
   pessoaNome: string;
   pessoaId: number;
+  transacoes: Transacao[]; // Agora recebendo transações como prop
+  setTransacoes: React.Dispatch<React.SetStateAction<Transacao[]>>; // Função para atualizar as transações
 };
 
-export function ListaTransacao({ pessoaNome, pessoaId }: ListaTransacaoProps) {
-  const [transacoes, setTransacoes] = useState<Transacao[]>([]);
+export function ListaTransacao({ pessoaNome, pessoaId, transacoes, setTransacoes }: ListaTransacaoProps) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    console.log("pessoaId recebido:", pessoaId); // Debug: verifique se está vindo corretamente
-    
     if (!pessoaId) {
       setError("Erro: pessoa não selecionada.");
       setLoading(false);
@@ -25,7 +24,7 @@ export function ListaTransacao({ pessoaNome, pessoaId }: ListaTransacaoProps) {
     async function carregarTransacoes() {
       try {
         const dados = await findTransacaoId(pessoaId);
-        setTransacoes(dados);
+        setTransacoes(dados); // Atualiza as transações diretamente
       } catch (erro) {
         setError("Erro ao carregar transações.");
       } finally {
@@ -34,7 +33,7 @@ export function ListaTransacao({ pessoaNome, pessoaId }: ListaTransacaoProps) {
     }
 
     carregarTransacoes();
-  }, [pessoaId]);
+  }, [pessoaId, setTransacoes]); // Adiciona setTransacoes como dependência
 
   if (loading) return <p>Carregando...</p>;
   if (error) return <p>{error}</p>;
